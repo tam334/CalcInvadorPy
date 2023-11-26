@@ -36,6 +36,24 @@ def SetPinStatus(mode) :
     db6.init(mode)
     db7.init(mode)
 
+def ExecFunc(funcParam) :
+    SetPinStatus(machine.Pin.OUT)
+    rs.value(0)
+    readWrite.value(0)
+    SetData(funcParam)
+    enable.value(0)
+    utime.sleep(0.05)
+    enable.value(1)
+
+def WriteData(data) :
+    SetPinStatus(machine.Pin.OUT)
+    rs.value(1)
+    readWrite.value(0)
+    SetData(data)
+    enable.value(0)
+    utime.sleep(0.05)
+    enable.value(1)
+
 # lock until busy flag clear
 def WaitBusyClear() :
     SetPinStatus(machine.Pin.IN)
@@ -57,22 +75,12 @@ led.value(0)
 
 #reset unmatch
 for i in range(5) :
-    rs.value(0)
-    readWrite.value(0)
-    SetData(0x00)
-    enable.value(0)
-    utime.sleep(0.05)
-    enable.value(1)
+    WriteData(0x00)
 
 led.value(1)
 
 # function set(JP fontset)
-rs.value(0)
-readWrite.value(0)
-SetData(0x30)
-enable.value(0)
-utime.sleep(0.05)
-enable.value(1)
+ExecFunc(0x30)
 
 led.value(0)
 
@@ -82,13 +90,7 @@ WaitBusyClear()
 led.value(1)
 
 # display on
-SetPinStatus(machine.Pin.OUT)
-rs.value(0)
-readWrite.value(0)
-SetData(0x0f)
-enable.value(0)
-utime.sleep(0.05)
-enable.value(1)
+ExecFunc(0x0f)
 
 led.value(0)
 
@@ -98,13 +100,7 @@ WaitBusyClear()
 led.value(1)
 
 # display clear
-SetPinStatus(machine.Pin.OUT)
-rs.value(0)
-readWrite.value(0)
-SetData(0x01)
-enable.value(0)
-utime.sleep(0.05)
-enable.value(1)
+ExecFunc(0x01)
 
 led.value(0)
 
@@ -114,13 +110,7 @@ WaitBusyClear()
 led.value(1)
 
 # return home
-SetPinStatus(machine.Pin.OUT)
-rs.value(0)
-readWrite.value(0)
-SetData(0x02)
-enable.value(0)
-utime.sleep(0.05)
-enable.value(1)
+ExecFunc(0x02)
 
 led.value(0)
 
@@ -130,15 +120,17 @@ WaitBusyClear()
 led.value(1)
 
 # entry mode set
-SetPinStatus(machine.Pin.OUT)
-rs.value(0)
-readWrite.value(0)
-SetData(0x06) # Incriment bit, Cursor Move
-enable.value(0)
-utime.sleep(0.05)
-enable.value(1)
+ExecFunc(0x06) # Incriment bit, Cursor Move
+
+led.value(0)
 
 while True:
-    utime.sleep(0.5)
-    led.value(0)
-    utime.sleep(3)
+    ExecFunc(0x01)
+    WaitBusyClear()
+    ExecFunc(0x02)
+    WaitBusyClear()
+    ExecFunc(0x80)
+    for i in range(9) :
+        WriteData(0x30 + i)
+        WaitBusyClear()
+    utime.sleep(1)
