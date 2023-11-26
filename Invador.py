@@ -42,7 +42,7 @@ def ExecFunc(funcParam) :
     readWrite.value(0)
     SetData(funcParam)
     enable.value(0)
-    utime.sleep(0.05)
+    utime.sleep(0.005)
     enable.value(1)
 
 def WriteData(data) :
@@ -51,7 +51,7 @@ def WriteData(data) :
     readWrite.value(0)
     SetData(data)
     enable.value(0)
-    utime.sleep(0.05)
+    utime.sleep(0.005)
     enable.value(1)
 
 # lock until busy flag clear
@@ -62,7 +62,7 @@ def WaitBusyClear() :
         rs.value(0)
         readWrite.value(1)
         enable.value(0)
-        utime.sleep(0.05)
+        utime.sleep(0.005)
         busy = db7.value()
         enable.value(1)
 
@@ -143,7 +143,11 @@ while True:
     WaitBusyClear()
     ExecFunc(0x02)
     WaitBusyClear()
-    for i in range(9) :
+    ExecFunc(0x06)
+    WaitBusyClear()
+    ExecFunc(0x14)
+    WaitBusyClear()
+    for i in range(4) :
         ExecFunc(0x80 + i)
         WaitBusyClear()
         WriteData(0x30 + i)
