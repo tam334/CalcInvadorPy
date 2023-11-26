@@ -62,8 +62,8 @@ def WaitBusyClear() :
         rs.value(0)
         readWrite.value(1)
         enable.value(0)
-        busy = db7.value()
         utime.sleep(0.05)
+        busy = db7.value()
         enable.value(1)
 
 #init and wait 0.5sec
@@ -80,7 +80,7 @@ for i in range(5) :
 led.value(1)
 
 # function set(JP fontset)
-ExecFunc(0x30)
+ExecFunc(0x3c)
 
 led.value(0)
 
@@ -122,6 +122,20 @@ led.value(1)
 # entry mode set
 ExecFunc(0x06) # Incriment bit, Cursor Move
 
+#check busy
+WaitBusyClear()
+
+#cursor shift
+ExecFunc(0x14)
+
+#check busy
+WaitBusyClear()
+
+ExecFunc(0x17)
+
+#check busy
+WaitBusyClear()
+
 led.value(0)
 
 while True:
@@ -129,8 +143,9 @@ while True:
     WaitBusyClear()
     ExecFunc(0x02)
     WaitBusyClear()
-    ExecFunc(0x80)
     for i in range(9) :
+        ExecFunc(0x80 + i)
+        WaitBusyClear()
         WriteData(0x30 + i)
         WaitBusyClear()
     utime.sleep(1)
