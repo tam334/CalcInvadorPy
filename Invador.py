@@ -148,14 +148,12 @@ while True:
     WaitBusyClear()
     ExecFunc(0x02)
     WaitBusyClear()
-    for i in range(12) :
-        ExecFunc(0x80 + i)
-        WaitBusyClear()
+    for i in range(16) :
         WriteData(0x30 + i)
         WaitBusyClear()
-    for i in range(12) :
-        ExecFunc(0xc0 + i)
-        WaitBusyClear()
+    ExecFunc(0xc0)
+    WaitBusyClear()
+    for i in range(16) :
         WriteData(0x30 + i)
         WaitBusyClear()
     utime.sleep(1)
