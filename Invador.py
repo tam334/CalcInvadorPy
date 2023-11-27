@@ -95,7 +95,7 @@ WaitBusyClear()
 led.value(1)
 
 # display on
-ExecFunc(0x0f)
+ExecFunc(0x0c)
 
 led.value(0)
 
