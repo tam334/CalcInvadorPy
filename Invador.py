@@ -39,36 +39,36 @@ def SetPinStatus(mode) :
 def ExecFunc(funcParam) :
     SetPinStatus(machine.Pin.OUT)
     rs.value(0)
-    utime.sleep(0.005)
+    utime.sleep(0.0000001)
     enable.value(1)
     readWrite.value(0)
     SetData(funcParam)
     enable.value(0)
-    utime.sleep(0.005)
+    utime.sleep(0.0000001)
 
 def WriteData(data) :
     SetPinStatus(machine.Pin.OUT)
     rs.value(1)
-    utime.sleep(0.005)
+    utime.sleep(0.0000001)
     enable.value(1)
     readWrite.value(0)
     SetData(data)
     enable.value(0)
-    utime.sleep(0.005)
+    utime.sleep(0.0000001)
 
 # lock until busy flag clear
 def WaitBusyClear() :
     SetPinStatus(machine.Pin.IN)
     rs.value(0)
-    utime.sleep(0.1)
+    utime.sleep(0.0000001)
     readWrite.value(1)
     busy = 1;
     while busy == 1:
         enable.value(0)
-        utime.sleep(0.005)
+        utime.sleep(0.0000001)
         busy = db7.value()
         enable.value(1)
-    utime.sleep(0.005)
+    utime.sleep(0.0000001)
     enable.value(0)
 
 #init and wait 0.5sec
@@ -143,17 +143,18 @@ WaitBusyClear()
 
 led.value(0)
 
+count = 0;
+
 while True:
-    ExecFunc(0x01)
-    WaitBusyClear()
-    ExecFunc(0x02)
+    ExecFunc(0x80)
     WaitBusyClear()
     for i in range(16) :
-        WriteData(0x30 + i)
+        WriteData(0x30 + (i + count) % 16)
         WaitBusyClear()
     ExecFunc(0xc0)
     WaitBusyClear()
     for i in range(16) :
-        WriteData(0x30 + i)
+        WriteData(0x30 + (i + 1 + count) % 16)
         WaitBusyClear()
     utime.sleep(1)
+    count = count + 1
