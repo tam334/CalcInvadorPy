@@ -53,7 +53,7 @@ class State(Enum):
 
 #タイトル
 titleFrameCount = 0
-def TitleLogo():
+def TitleLogo(button):
     global titleFrameCount
     global currentState
     SetAsciiStr(0, 4, ("DENTAKU INVADOR")[0:int(titleFrameCount/15)])
@@ -63,18 +63,23 @@ def TitleLogo():
         titleFrameCount = 0
 
 #タイトル入力待ち
-def TitleWait():
+def TitleWait(button):
+    global currentState
     SetAsciiStr(0, 2, "DENTAKU INVADOR")
     SetAsciiStr(1, 2, "PRESS RIGHT BUTTON")
+    if button & 0x02 > 0:
+        currentState = State.GAME_READY
 
 #状態関数
 state = {State.TITLE_LOGOANIMATION: TitleLogo,
     State.TITLE_WAIT: TitleWait}
 
 currentState = State.TITLE_LOGOANIMATION
+button = 0
 
 #フレーム共通処理
 while True:
     if not isRenderOk:
-        state[currentState]()
+        state[currentState](button)
         isRenderOk = True
+        button = Dev.PopCurrentButton()
