@@ -4,7 +4,9 @@ import threading
 from enum import Enum
 
 screenBuffer = [ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "),
-    ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord("0")]
+    ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "),
+    ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "),
+    ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" ")]
 
 #描画共通処理
 def Render():
@@ -19,25 +21,25 @@ def Render():
         #フレーム共通処理を動かす
         isRenderOk = False
         #描画スレッド待機
-        tm = threading.Timer(1, Render)
+        tm = threading.Timer(0.016, Render)
         tm.start()
 
 #ASCII文字の書き込み
 def SetAscii(row, column, code):
-    screenBuffer[row * 10 + column] = code
+    screenBuffer[row * 20 + column] = code
 
 #ASCII文字列の書き込み
 def SetAsciiStr(row, column, str):
-    strlen = 0;
-    code = 0
+    strlen = len(str);
     for i in range(strlen):
+        code = ord(str[i:i+1])
         SetAscii(row, column + i, code)
 
 #初期化
 Dev.Init()
 
 #描画スレッドスタート
-tm = threading.Timer(1, Render)
+tm = threading.Timer(0.016, Render)
 tm.start()
 isRenderOk = False
 
@@ -50,13 +52,23 @@ class State(Enum):
     GAME_GAMEOVER = 5,
 
 #タイトル
+titleFrameCount = 0
 def TitleLogo():
-    screenBuffer[19] += 1
+    global titleFrameCount
+    SetAsciiStr(0, 4, ("DENTAKU INVADOR")[0:int(titleFrameCount/15)])
+    titleFrameCount += 1
+    if titleFrameCount / 15 > 15:
+        currentState = State.TITLE_WAIT
+        titleFrameCount = 0
 
-#
+#タイトル入力待ち
+def TitleWait():
+    SetAsciiStr(0, 2, "DENTAKU INVADOR")
+    SetAsciiStr(1, 1, "PRESS RIGHT BUTTON")
 
 #状態関数
-state = {State.TITLE_LOGOANIMATION: TitleLogo}
+state = {State.TITLE_LOGOANIMATION: TitleLogo,
+    State.TITLE_WAIT: TitleWait}
 
 currentState = State.TITLE_LOGOANIMATION
 

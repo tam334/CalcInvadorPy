@@ -6,6 +6,6 @@ def Init():
 def TransferScreen(screenBuf):
     os.system("clear")
     for r in range(2):
-        for c in range(10):
-            print(chr(screenBuf[r * 10 + c]), end="")
+        for c in range(20):
+            print(chr(screenBuf[r * 20 + c]), end="")
         print("")
