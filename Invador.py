@@ -56,7 +56,7 @@ titleFrameCount = 0
 def TitleLogo(button):
     global titleFrameCount
     global currentState
-    SetAsciiStr(0, 4, ("DENTAKU INVADOR")[0:int(titleFrameCount/15)])
+    SetAsciiStr(0, 2, ("DENTAKU INVADOR")[0:int(titleFrameCount/15)])
     titleFrameCount += 1
     if titleFrameCount / 15 > 15:
         currentState = State.TITLE_WAIT
@@ -70,12 +70,38 @@ def TitleWait(button):
     if button & 0x02 > 0:
         currentState = State.GAME_READY
 
+#READY
+def GameReady(button):
+    global titleFrameCount
+    titleFrameCount += 1
+    SetAsciiStr(1, 7, "READY?")
+    if titleFrameCount / 15 > 1:
+        currentState = State.GAME_MAIN
+        titleFrameCount = 0
+        score = 0
+
+#ゲーム中
+def GameMain(button):
+    pass
+
+#GAME OVER
+def GameOver(button):
+    global titleFrameCount
+    titleFrameCount += 1
+    SetAsciiStr(0, 4, " GAME OVER ")
+    if titleFrameCount / 15 > 1 and button & 0x02 > 0:
+        currentState = State.TITLE_WAIT
+
 #状態関数
 state = {State.TITLE_LOGOANIMATION: TitleLogo,
-    State.TITLE_WAIT: TitleWait}
+    State.TITLE_WAIT: TitleWait,
+    State.GAME_READY: GameReady,
+    State.GAME_MAIN: GameMain,
+    State.GAME_GAMEOVER: GameOver}
 
 currentState = State.TITLE_LOGOANIMATION
 button = 0
+score = 0
 
 #フレーム共通処理
 while True:
