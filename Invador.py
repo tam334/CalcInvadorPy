@@ -55,6 +55,7 @@ class State(Enum):
 titleFrameCount = 0
 def TitleLogo():
     global titleFrameCount
+    global currentState
     SetAsciiStr(0, 4, ("DENTAKU INVADOR")[0:int(titleFrameCount/15)])
     titleFrameCount += 1
     if titleFrameCount / 15 > 15:
@@ -64,7 +65,7 @@ def TitleLogo():
 #タイトル入力待ち
 def TitleWait():
     SetAsciiStr(0, 2, "DENTAKU INVADOR")
-    SetAsciiStr(1, 1, "PRESS RIGHT BUTTON")
+    SetAsciiStr(1, 2, "PRESS RIGHT BUTTON")
 
 #状態関数
 state = {State.TITLE_LOGOANIMATION: TitleLogo,

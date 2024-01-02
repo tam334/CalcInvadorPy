@@ -8,4 +8,4 @@ def TransferScreen(screenBuf):
     for r in range(2):
         for c in range(20):
             print(chr(screenBuf[r * 20 + c]), end="")
-        print("")
+        print("", end="\n")
