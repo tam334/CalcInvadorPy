@@ -3,10 +3,10 @@ import time
 import threading
 from enum import Enum
 
-screenBuffer = [ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "),
-    ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "),
-    ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "),
-    ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" ")]
+screenBuffer = [ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "),
+    ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "),
+    ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "),
+    ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" ")]
 
 #描画共通処理
 def Render():
@@ -26,7 +26,7 @@ def Render():
 
 #ASCII文字の書き込み
 def SetAscii(row, column, code):
-    screenBuffer[row * 20 + column] = code
+    screenBuffer[row * 16 + column] = code
 
 #ASCII文字列の書き込み
 def SetAsciiStr(row, column, str):
@@ -34,6 +34,12 @@ def SetAsciiStr(row, column, str):
     for i in range(strlen):
         code = ord(str[i:i+1])
         SetAscii(row, column + i, code)
+
+#文字を全て空白に
+def SetAllSpace():
+    for r in range(2):
+        for c in range(16):
+            SetAscii(r, c, ord(" "))
 
 #初期化
 Dev.Init()
@@ -56,7 +62,7 @@ titleFrameCount = 0
 def TitleLogo(button):
     global titleFrameCount
     global currentState
-    SetAsciiStr(0, 2, ("DENTAKU INVADOR")[0:int(titleFrameCount/15)])
+    SetAsciiStr(0, 0, ("DENTAKU INVADOR")[0:int(titleFrameCount/15)])
     titleFrameCount += 1
     if titleFrameCount / 15 > 15:
         currentState = State.TITLE_WAIT
@@ -65,9 +71,10 @@ def TitleLogo(button):
 #タイトル入力待ち
 def TitleWait(button):
     global currentState
-    SetAsciiStr(0, 2, "DENTAKU INVADOR")
-    SetAsciiStr(1, 2, "PRESS RIGHT BUTTON")
+    SetAsciiStr(0, 0, "DENTAKU INVADOR")
+    SetAsciiStr(1, 0, "PRESS R BUTTON")
     if button & 0x02 > 0:
+        SetAllSpace()
         currentState = State.GAME_READY
 
 #READY
