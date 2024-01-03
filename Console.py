@@ -1,19 +1,24 @@
 import os
 import threading
+from pynput import keyboard
 
 def OnPressKey(key):
-    #global buttonBuffer
-    #if key.char == 'z':
-    #    buttonBuffer |= 0x01
-    #elif key.char == 'x':
-    #    buttonBuffer |= 0x02
+    global buttonBuffer
+    if key.char == 'z':
+        buttonBuffer |= 0x01
+    elif key.char == 'x':
+        buttonBuffer |= 0x02
     return True
+
+def OnReleaseKey(key):
+    pass
 
 def Init():
     global buttonBuffer
     buttonBuffer = 0
-    #listener = keyboard.Listener(on_press=OnPressKey)
-    #listener.start()
+    listener = keyboard.Listener(on_press=OnPressKey,
+        on_release=OnReleaseKey)
+    listener.start()
     os.system("clear")
 
 def TransferScreen(screenBuf):
@@ -25,7 +30,7 @@ def TransferScreen(screenBuf):
 
 def PopCurrentButton():
     global buttonBuffer
-    button = 0x2
+    button = buttonBuffer
     buttonBuffer = 0
     return button
 
