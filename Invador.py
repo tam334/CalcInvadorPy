@@ -1,6 +1,4 @@
 import Console as Dev
-import time
-import threading
 from enum import Enum
 
 screenBuffer = [ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "),
@@ -12,17 +10,10 @@ screenBuffer = [ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(" "), ord(
 def Render():
     global isRenderOk
     if isRenderOk:
-        #コールバック一時解除
-        global tm
-        tm.cancel()
-        del tm
         #転送
         Dev.TransferScreen(screenBuffer)
         #フレーム共通処理を動かす
         isRenderOk = False
-        #描画スレッド待機
-        tm = threading.Timer(0.016, Render)
-        tm.start()
 
 #ASCII文字の書き込み
 def SetAscii(row, column, code):
@@ -45,8 +36,7 @@ def SetAllSpace():
 Dev.Init()
 
 #描画スレッドスタート
-tm = threading.Timer(0.016, Render)
-tm.start()
+Dev.SetRenderFunc(Render)
 isRenderOk = False
 
 #状態定義

@@ -1,4 +1,5 @@
 import os
+import threading
 
 def OnPressKey(key):
     #global buttonBuffer
@@ -27,3 +28,20 @@ def PopCurrentButton():
     button = 0x2
     buttonBuffer = 0
     return button
+
+def InnerRender():
+    global renderFunc
+    #コールバック一時解除
+    global tm
+    tm.cancel()
+    del tm
+    renderFunc()
+    tm = threading.Timer(0.016, InnerRender)
+    tm.start()
+
+def SetRenderFunc(func):
+    global renderFunc
+    global tm
+    renderFunc = func
+    tm = threading.Timer(0.016, InnerRender)
+    tm.start()
