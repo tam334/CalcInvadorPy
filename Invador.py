@@ -70,16 +70,34 @@ def TitleWait(button):
 #READY
 def GameReady(button):
     global titleFrameCount
+    global playerNumber
+    global score
+    global currentState
     titleFrameCount += 1
     SetAsciiStr(1, 7, "READY?")
     if titleFrameCount / 15 > 1:
         currentState = State.GAME_MAIN
         titleFrameCount = 0
+        playerNumber = 1
         score = 0
 
 #ゲーム中
 def GameMain(button):
-    pass
+    global score
+    global playerNumber
+    #プレイヤー番号変更
+    if button & 0x01 > 0:
+        if playerNumber == "n":
+            playerNumber = 0
+        else:
+            playerNumber += 1
+            if playerNumber > 9:
+                playerNumber = "n"
+    if button & 0x02 > 0:
+        pass
+    SetAllSpace()
+    SetAsciiStr(0, 0, "{0}".format(playerNumber))
+    SetAsciiStr(1, 0, "SC {0:5d}".format(score))
 
 #GAME OVER
 def GameOver(button):
