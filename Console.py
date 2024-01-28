@@ -1,5 +1,6 @@
 import os
 import threading
+import time
 from pynput import keyboard
 
 def OnPressKey(key):
@@ -50,3 +51,6 @@ def SetRenderFunc(func):
     renderFunc = func
     tm = threading.Timer(0.016, InnerRender)
     tm.start()
+
+def Sleep(t):
+    time.sleep(t)

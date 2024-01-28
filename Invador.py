@@ -75,7 +75,7 @@ def GameReady(button):
     global currentState
     titleFrameCount += 1
     SetAsciiStr(1, 7, "READY?")
-    if titleFrameCount / 15 > 1:
+    if titleFrameCount / 60 > 1:
         currentState = State.GAME_MAIN
         titleFrameCount = 0
         playerNumber = 1
@@ -85,6 +85,7 @@ def GameReady(button):
 def GameMain(button):
     global score
     global playerNumber
+    global enemyTimer
     #プレイヤー番号変更
     if button & 0x01 > 0:
         if playerNumber == "n":
@@ -95,6 +96,7 @@ def GameMain(button):
                 playerNumber = "n"
     if button & 0x02 > 0:
         pass
+    #敵の進行
     SetAllSpace()
     SetAsciiStr(0, 0, "{0}".format(playerNumber))
     SetAsciiStr(1, 0, "SC {0:5d}".format(score))
@@ -104,7 +106,7 @@ def GameOver(button):
     global titleFrameCount
     titleFrameCount += 1
     SetAsciiStr(0, 4, " GAME OVER ")
-    if titleFrameCount / 15 > 1 and button & 0x02 > 0:
+    if titleFrameCount / 60 > 1 and button & 0x02 > 0:
         currentState = State.TITLE_WAIT
 
 #状態関数
@@ -124,3 +126,5 @@ while True:
         state[currentState](button)
         isRenderOk = True
         button = Dev.PopCurrentButton()
+    else:
+        Dev.Sleep(0.001)
