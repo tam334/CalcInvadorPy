@@ -94,6 +94,7 @@ def GameMain(button):
     global enemyTimer
     global enemyLevel
     global enemies
+    global currentState
     #プレイヤー番号変更
     if button & 0x01 > 0:
         if playerNumber == "n":
@@ -108,8 +109,9 @@ def GameMain(button):
     enemyTimer += 1
     if enemyTimer >= 60 - enemyLevel * 2:
         #ゲームオーバー判定
-        if len(enemies) > 10:
-            pass
+        if len(enemies) >= 10:
+            currentState = State.GAME_GAMEOVER
+            return
         #進行、出現
         enemies.append(0)
         enemyTimer = 0
@@ -125,8 +127,9 @@ def GameMain(button):
 #GAME OVER
 def GameOver(button):
     global titleFrameCount
+    global currentState
     titleFrameCount += 1
-    SetAsciiStr(0, 4, " GAME OVER ")
+    SetAsciiStr(0, 3, " GAME OVER ")
     if titleFrameCount / 60 > 1 and button & 0x02 > 0:
         currentState = State.TITLE_WAIT
 
