@@ -73,6 +73,9 @@ def GameReady(button):
     global playerNumber
     global score
     global currentState
+    global enemyTimer
+    global enemyLevel
+    global enemies
     titleFrameCount += 1
     SetAsciiStr(1, 7, "READY?")
     if titleFrameCount / 60 > 1:
@@ -80,12 +83,17 @@ def GameReady(button):
         titleFrameCount = 0
         playerNumber = 1
         score = 0
+        enemyTimer = 0
+        enemyLevel = 0
+        enemies = []
 
 #ゲーム中
 def GameMain(button):
     global score
     global playerNumber
     global enemyTimer
+    global enemyLevel
+    global enemies
     #プレイヤー番号変更
     if button & 0x01 > 0:
         if playerNumber == "n":
@@ -97,8 +105,21 @@ def GameMain(button):
     if button & 0x02 > 0:
         pass
     #敵の進行
+    enemyTimer += 1
+    if enemyTimer >= 60 - enemyLevel * 2:
+        #ゲームオーバー判定
+        if len(enemies) > 10:
+            pass
+        #進行、出現
+        enemies.append(0)
+        enemyTimer = 0
     SetAllSpace()
+    #プレイヤー
     SetAsciiStr(0, 0, "{0}".format(playerNumber))
+    #敵
+    for i in range(0, len(enemies)):
+        SetAsciiStr(0, 1 + 9 - i, "0")
+    #スコア
     SetAsciiStr(1, 0, "SC {0:5d}".format(score))
 
 #GAME OVER
